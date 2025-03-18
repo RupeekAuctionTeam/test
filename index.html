@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Management Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #333333;
+            color: #333;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e4e8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: "₹";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 200px;
+            color: #ffd700;
+            opacity: 0.1;
+            animation: shine 3s infinite;
+            z-index: 0;
+        }
+
+        @keyframes shine {
+            0% { text-shadow: 0 0 10px #ffd700; }
+            50% { text-shadow: 0 0 20px #ffd700, 0 0 30px #ffaa00; }
+            100% { text-shadow: 0 0 10px #ffd700; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .static-field {
+            display: flex;
+            position: relative;
+            z-index: 1;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a3c6d;
+        }
+
+        select, input[type="text"], input[type="number"], input[type="date"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #c0c7d1;
+            border-radius: 6px;
+            box-sizing: border-box;
+            background-color: #fafafa;
+            font-size: 14px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            border-color: #2a6db8;
+            box-shadow: 0 0 5px rgba(42, 109, 184, 0.3);
+            outline: none;
+        }
+
+        select {
+            height: 40px;
+            cursor: pointer;
+            position: relative;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%231a3c6d" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        select {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        select:valid {
+            animation: bounce 0.3s ease;
+        }
+
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a3c6d;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        button {
+            background-color: #2a6db8;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        button:hover {
+            background-color: #1a3c6d;
+            transform: translateY(-2px);
+        }
+
+        .location-button {
+            background-color: #28a745;
+            margin-top: 12px;
+            width: auto;
+            padding: 10px 20px;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+            animation: pulse 1.5s infinite;
+            padding-left: 35px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: 10px center;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .location-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            animation: none;
+        }
+
+        .location-display {
+            margin-top: 8px;
+            color: #555;
+            font-size: 13px;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            button {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Auction Management Form</h1>
+        <form id="auctionForm">
+            <!-- Static Fields (Always Visible) -->
+            <div class="form-group static-field">
+                <label for="agentName">Agent Name</label>
+                <select id="agentName" name="agentName" required>
+                    <option value="">Select Agent</option>
+                    <option value="Archana">Archana</option>
+                    <option value="Arif">Arif</option>
+                    <option value="Azmath">Azmath</option>
+                    <option value="Eram">Eram</option>
+                    <option value="Fouziya">Fouziya</option>
+                    <option value="Mahesh">Mahesh</option>
+                    <option value="Manasa">Manasa</option>
+                    <option value="Margaret">Margaret</option>
+                    <option value="Nageena">Nageena</option>
+                    <option value="Nagendra">Nagendra</option>
+                    <option value="Nagraj">Nagraj</option>
+                    <option value="Priya">Priya</option>
+                    <option value="Vijay">Vijay</option>
+                </select>
+            </div>
+
+            <div class="form-group static-field">
+                <label for="secGlId">Sec GL ID</label>
+                <input type="number" id="secGlId" name="secGlId" required>
+            </div>
+
+            <div class="form-group static-field">
+                <label for="secClosureOs">Sec Closure OS</label>
+                <input type="number" id="secClosureOs" name="secClosureOs" required>
+            </div>
+
+            <div class="form-group static-field">
+                <label for="unsecClosureOs">UnSec Closure OS</label>
+                <input type="number" id="unsecClosureOs" name="unsecClosureOs" required>
+            </div>
+
+            <div class="form-group static-field">
+                <label for="auctionType">Auction Type</label>
+                <select id="auctionType" name="auctionType" required>
+                    <option value="">Select Auction Type</option>
+                    <option value="Pre-Auction Calling">Pre-Auction Calling</option>
+                    <option value="Post-Auction Calling">Post-Auction Calling</option>
+                    <option value="Pre-Auction Field Visit">Pre-Auction Field Visit</option>
+                    <option value="Post-Auction Field Visit">Post-Auction Field Visit</option>
+                    <option value="Pre-Auction Closure">Pre-Auction Closure</option>
+                    <option value="Pre-Auction Closure in Field">Pre-Auction Closure in Field</option>
+                    <option value="Post-Auction Closure">Post-Auction Closure</option>
+                    <option value="Post-Auction Closure in Field">Post-Auction Closure in Field</option>
+                </select>
+            </div>
+
+            <!-- Conditional Fields -->
+            <div class="form-group" id="primaryDispositionsGroup">
+                <label for="primaryDispositions">Primary Dispositions</label>
+                <select id="primaryDispositions" name="primaryDispositions">
+                    <option value="">Select Primary Disposition</option>
+                    <option value="Right party contact">Right party contact</option>
+                    <option value="No right party contact">No right party contact</option>
+                    <option value="No Contact">No Contact</option>
+                    <option value="Post Auction">Post Auction</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="subDispositionsGroup">
+                <label for="subDispositions">Sub Dispositions</label>
+                <select id="subDispositions" name="subDispositions">
+                    <option value="">Select Sub Disposition</option>
+                    <option value="Promise to Pay Renewal">Promise to Pay Renewal</option>
+                    <option value="Promise to Pay Release">Promise to Pay Release</option>
+                    <option value="Promise to Pay ITO">Promise to Pay ITO</option>
+                    <option value="Promise to Pay RNRP">Promise to Pay RNRP</option>
+                    <option value="Promise to Pay MIP interest">Promise to Pay MIP interest</option>
+                    <option value="Pay Within Week">Pay Within Week</option>
+                    <option value="Paid for ITO Awaiting for Slot">Paid for ITO Awaiting for Slot</option>
+                    <option value="Paid for RNRP Awaiting for Slot">Paid for RNRP Awaiting for Slot</option>
+                    <option value="Pay Within 15 days">Pay Within 15 days</option>
+                    <option value="PTP But Not Confirm Date">PTP But Not Confirm Date</option>
+                    <option value="UT A/C Cx Will Clear by Tenure End">UT A/C Cx Will Clear by Tenure End</option>
+                    <option value="Broken Promise to Pay">Broken Promise to Pay</option>
+                    <option value="Escalation Case">Escalation Case</option>
+                    <option value="Medical Issue">Medical Issue</option>
+                    <option value="Abuse Cx">Abuse Cx</option>
+                    <option value="Intent To Auction">Intent To Auction</option>
+                    <option value="Legal Case">Legal Case</option>
+                    <option value="Direct Fed NPA">Direct Fed NPA</option>
+                    <option value="No NPA At Branch">No NPA At Branch</option>
+                    <option value="Released">Released</option>
+                    <option value="Renewed">Renewed</option>
+                    <option value="ITO Booked">ITO Booked</option>
+                    <option value="RNRP Booked">RNRP Booked</option>
+                    <option value="MIP - interest cleared">MIP - interest cleared</option>
+                    <option value="Call Back Request">Call Back Request</option>
+                    <option value="Left Message">Left Message</option>
+                    <option value="Customer Deceased">Customer Deceased</option>
+                    <option value="RNR">RNR</option>
+                    <option value="Switched off">Switched off</option>
+                    <option value="Not reachable">Not reachable</option>
+                    <option value="Call Drop">Call Drop</option>
+                    <option value="Promise to Pay Post Auction">Promise to Pay Post Auction</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="remarksGroup">
+                <label for="remarks">Remarks</label>
+                <input type="text" id="remarks" name="remarks">
+            </div>
+
+            <div class="form-group" id="ptpDateGroup">
+                <label for="ptpDate">PTP Date</label>
+                <input type="date" id="ptpDate" name="ptpDate">
+            </div>
+
+            <div class="form-group" id="preAuctionClosureGroup">
+                <label for="preAuctionClosure">Pre-Auction Closure Type</label>
+                <select id="preAuctionClosure" name="preAuctionClosure">
+                    <option value="">Select Pre-Auction Closure</option>
+                    <option value="Renawed">Renawed</option>
+                    <option value="Released">Released</option>
+                    <option value="ITO">ITO</option>
+                    <option value="RNRP">RNRP</option>
+                    <option value="MIP Interest Paid">MIP Interest Paid</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="postAuctionClosureGroup">
+                <label for="postAuctionClosure">Post-Auction Closure Type</label>
+                <select id="postAuctionClosure" name="postAuctionClosure">
+                    <option value="">Select Post-Auction Closure</option>
+                    <option value="Full Payment">Full Payment</option>
+                    <option value="Partial Payment">Partial Payment</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="customerNameGroup">
+                <label for="customerName">Customer Name</label>
+                <input type="text" id="customerName" name="customerName">
+            </div>
+
+            <div class="form-group" id="customerNumberGroup">
+                <label for="customerNumber">Customer Number</label>
+                <input type="text" id="customerNumber" name="customerNumber">
+            </div>
+
+            <div class="form-group" id="paymentDateGroup">
+                <label for="paymentDate">Payment Date</label>
+                <input type="date" id="paymentDate" name="paymentDate">
+            </div>
+
+            <div class="form-group" id="paymentScreenshotGroup">
+                <label for="paymentScreenshot">Payment Screenshot</label>
+                <input type="file" id="paymentScreenshot" name="paymentScreenshot" accept="image/*">
+            </div>
+
+            <div class="form-group" id="fieldVisitPhotoGroup">
+                <label for="fieldVisitPhoto">Field Visit Photo</label>
+                <input type="file" id="fieldVisitPhoto" name="fieldVisitPhoto" accept="image/*">
+                <button type="button" class="location-button" onclick="getLocation()">Capture Location</button>
+                <div id="locationDisplay" class="location-display">Latitude: Not captured | Longitude: Not captured</div>
+            </div>
+
+            <input type="hidden" id="timestamp" name="timestamp">
+
+            <button type="submit" id="submitButton">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Auction Type handler (unchanged)
+        document.getElementById('auctionType').addEventListener('change', function() {
+            const groups = [
+                'primaryDispositionsGroup', 'subDispositionsGroup', 'remarksGroup', 'ptpDateGroup',
+                'preAuctionClosureGroup', 'postAuctionClosureGroup', 'customerNameGroup',
+                'customerNumberGroup', 'paymentDateGroup', 'paymentScreenshotGroup', 'fieldVisitPhotoGroup'
+            ];
+            groups.forEach(group => {
+                document.getElementById(group).style.display = 'none';
+            });
+
+            const selectedValue = this.value;
+            
+            switch(selectedValue) {
+                case 'Pre-Auction Calling':
+                case 'Post-Auction Calling':
+                    document.getElementById('primaryDispositionsGroup').style.display = 'flex';
+                    document.getElementById('subDispositionsGroup').style.display = 'flex';
+                    document.getElementById('remarksGroup').style.display = 'flex';
+                    break;
+
+                case 'Pre-Auction Field Visit':
+                case 'Post-Auction Field Visit':
+                    document.getElementById('primaryDispositionsGroup').style.display = 'flex';
+                    document.getElementById('subDispositionsGroup').style.display = 'flex';
+                    document.getElementById('remarksGroup').style.display = 'flex';
+                    document.getElementById('fieldVisitPhotoGroup').style.display = 'flex';
+                    break;
+
+                case 'Pre-Auction Closure':
+                    document.getElementById('preAuctionClosureGroup').style.display = 'flex';
+                    break;
+
+                case 'Pre-Auction Closure in Field':
+                    document.getElementById('preAuctionClosureGroup').style.display = 'flex';
+                    document.getElementById('fieldVisitPhotoGroup').style.display = 'flex';
+                    break;
+
+                case 'Post-Auction Closure':
+                    document.getElementById('postAuctionClosureGroup').style.display = 'flex';
+                    document.getElementById('customerNameGroup').style.display = 'flex';
+                    document.getElementById('customerNumberGroup').style.display = 'flex';
+                    document.getElementById('paymentDateGroup').style.display = 'flex';
+                    document.getElementById('paymentScreenshotGroup').style.display = 'flex';
+                    break;
+
+                case 'Post-Auction Closure in Field':
+                    document.getElementById('postAuctionClosureGroup').style.display = 'flex';
+                    document.getElementById('customerNameGroup').style.display = 'flex';
+                    document.getElementById('customerNumberGroup').style.display = 'flex';
+                    document.getElementById('paymentDateGroup').style.display = 'flex';
+                    document.getElementById('fieldVisitPhotoGroup').style.display = 'flex';
+                    document.getElementById('paymentScreenshotGroup').style.display = 'flex';
+                    break;
+            }
+        });
+
+        // PTP Date handler (unchanged)
+        document.getElementById('subDispositions').addEventListener('change', function() {
+            const ptpDateGroup = document.getElementById('ptpDateGroup');
+            const promiseToPayOptions = [
+                'Promise to Pay Renewal',
+                'Promise to Pay Release',
+                'Promise to Pay ITO',
+                'Promise to Pay RNRP',
+                'Promise to Pay MIP interest',
+                'Promise to Pay Post Auction'
+            ];
+            
+            if (promiseToPayOptions.includes(this.value)) {
+                ptpDateGroup.style.display = 'flex';
+            } else {
+                ptpDateGroup.style.display = 'none';
+            }
+        });
+
+        // Primary Dispositions handler (unchanged)
+        document.getElementById('primaryDispositions').addEventListener('change', function() {
+            const subDispositions = document.getElementById('subDispositions');
+            const currentValue = subDispositions.value;
+            
+            subDispositions.innerHTML = '<option value="">Select Sub Disposition</option>';
+
+            const rightPartyOptions = [
+                'Promise to Pay Renewal', 'Promise to Pay Release', 'Promise to Pay ITO',
+                'Promise to Pay RNRP', 'Promise to Pay MIP interest', 'Pay Within Week',
+                'Paid for ITO Awaiting for Slot', 'Paid for RNRP Awaiting for Slot',
+                'Pay Within 15 days', 'PTP But Not Confirm Date', 'UT A/C Cx Will Clear by Tenure End',
+                'Broken Promise to Pay', 'Escalation Case', 'Medical Issue', 'Abuse Cx',
+                'Intent To Auction', 'Legal Case', 'Direct Fed NPA', 'No NPA At Branch',
+                'Released', 'Renewed', 'ITO Booked', 'RNRP Booked', 'MIP - interest cleared'
+            ];
+
+            const noRightPartyOptions = [
+                'Call Back Request', 'Left Message', 'Customer Deceased'
+            ];
+
+            const noContactOptions = [
+                'RNR', 'Switched off', 'Not reachable', 'Call Drop'
+            ];
+
+            let optionsToAdd = [];
+            switch(this.value) {
+                case 'Right party contact':
+                    optionsToAdd = rightPartyOptions;
+                    break;
+                case 'No right party contact':
+                    optionsToAdd = noRightPartyOptions;
+                    break;
+                case 'No Contact':
+                    optionsToAdd = noContactOptions;
+                    break;
+            }
+
+            optionsToAdd.forEach(option => {
+                const newOption = document.createElement('option');
+                newOption.value = option;
+                newOption.text = option;
+                subDispositions.appendChild(newOption);
+            });
+
+            if (optionsToAdd.includes(currentValue)) {
+                subDispositions.value = currentValue;
+            }
+
+            subDispositions.dispatchEvent(new Event('change'));
+        });
+
+        // Location capture function (unchanged)
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        document.getElementById('locationDisplay').textContent = 
+                            `Latitude: ${latitude.toFixed(6)} | Longitude: ${longitude.toFixed(6)}`;
+                        
+                        let latInput = document.getElementById('latitude');
+                        let lonInput = document.getElementById('longitude');
+                        if (!latInput) {
+                            latInput = document.createElement('input');
+                            latInput.type = 'hidden';
+                            latInput.id = 'latitude';
+                            latInput.name = 'latitude';
+                            document.getElementById('fieldVisitPhotoGroup').appendChild(latInput);
+                        }
+                        if (!lonInput) {
+                            lonInput = document.createElement('input');
+                            lonInput.type = 'hidden';
+                            lonInput.id = 'longitude';
+                            lonInput.name = 'longitude';
+                            document.getElementById('fieldVisitPhotoGroup').appendChild(lonInput);
+                        }
+                        latInput.value = latitude;
+                        lonInput.value = longitude;
+                    },
+                    (error) => {
+                        document.getElementById('locationDisplay').textContent = 
+                            'Error: Unable to capture location. Please allow location access.';
+                        console.error('Geolocation error:', error);
+                    }
+                );
+            } else {
+                document.getElementById('locationDisplay').textContent = 
+                    'Error: Geolocation is not supported by this browser.';
+            }
+        }
+
+        // Form submission handler with timestamp, one-time submission, and auto-refresh
+        let isSubmitted = false;
+
+        document.getElementById('auctionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (isSubmitted) {
+                alert('Form has already been submitted. Please wait for the page to refresh.');
+                return;
+            }
+
+            const visibleGroups = Array.from(document.querySelectorAll('.form-group'))
+                .filter(group => group.style.display === 'flex');
+            
+            let isValid = true;
+            let errorMessage = "Please fill the following required fields:\n";
+
+            const staticFields = [
+                { id: 'agentName', name: 'Agent Name' },
+                { id: 'secGlId', name: 'Sec GL ID' },
+                { id: 'secClosureOs', name: 'Sec Closure OS' },
+                { id: 'unsecClosureOs', name: 'UnSec Closure OS' },
+                { id: 'auctionType', name: 'Auction Type' }
+            ];
+            
+            staticFields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (!element.value) {
+                    isValid = false;
+                    errorMessage += `- ${field.name}\n`;
+                }
+            });
+
+            visibleGroups.forEach(group => {
+                const input = group.querySelector('input, select');
+                if (input) {
+                    if (input.type === 'file') {
+                        if (!input.files.length) {
+                            isValid = false;
+                            errorMessage += `- ${group.querySelector('label').textContent}\n`;
+                        }
+                    } else if (!input.value) {
+                        isValid = false;
+                        errorMessage += `- ${group.querySelector('label').textContent}\n`;
+                    }
+                }
+            });
+
+            const subDispositions = document.getElementById('subDispositions').value;
+            const ptpDateGroup = document.getElementById('ptpDateGroup');
+            const ptpDate = document.getElementById('ptpDate');
+            const promiseToPayOptions = [
+                'Promise to Pay Renewal', 'Promise to Pay Release', 'Promise to Pay ITO',
+                'Promise to Pay RNRP', 'Promise to Pay MIP interest', 'Promise to Pay Post Auction'
+            ];
+            if (promiseToPayOptions.includes(subDispositions) && ptpDateGroup.style.display === 'flex' && !ptpDate.value) {
+                isValid = false;
+                errorMessage += "- PTP Date\n";
+            }
+
+            const fieldVisitPhotoGroup = document.getElementById('fieldVisitPhotoGroup');
+            if (fieldVisitPhotoGroup.style.display === 'flex' && 
+                document.getElementById('locationDisplay').textContent === 'Latitude: Not captured | Longitude: Not captured') {
+                isValid = false;
+                errorMessage += "- Capture Location (required with Field Visit Photo)\n";
+            }
+
+            if (!isValid) {
+                alert(errorMessage);
+                return;
+            }
+
+            const timestampInput = document.getElementById('timestamp');
+            const now = new Date();
+            timestampInput.value = now.toLocaleString('en-IN', { 
+                dateStyle: 'medium', 
+                timeStyle: 'medium' 
+            });
+
+            isSubmitted = true;
+            document.getElementById('submitButton').disabled = true;
+
+            var formData = new FormData(this);
+            
+            var latInput = document.getElementById('latitude');
+            var lonInput = document.getElementById('longitude');
+            if (latInput) formData.append('latitude', latInput.value);
+            if (lonInput) formData.append('longitude', lonInput.value);
+            
+            fetch('https://script.google.com/macros/s/AKfycbwUoC94ssU5XkfdEwmiphI3N8KrQckz8QPCQEHA9abYQrO02VXV_dj26NfUyxGy6R7Q/exec', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    setTimeout(() => {
+                        location.reload(); // Refresh the page automatically without alert
+                    }, 1000);
+                } else {
+                    alert('Error submitting form data.');
+                    isSubmitted = false;
+                    document.getElementById('submitButton').disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting form data.');
+                isSubmitted = false;
+                document.getElementById('submitButton').disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
