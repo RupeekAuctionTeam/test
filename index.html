@@ -10,12 +10,12 @@
             max-width: 900px;
             margin: 30px auto;
             padding: 30px;
-            background-color: #1995AD;
+            background-color: #333333;
             color: #333;
         }
 
         .form-container {
-            background-color: #A1D6E2;
+            background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -31,7 +31,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 200px;
-            color: #050505;
+            color: #ffd700;
             opacity: 0.1;
             animation: shine 3s infinite;
             z-index: 0;
@@ -61,7 +61,7 @@
         label {
             font-weight: 600;
             margin-bottom: 8px;
-            color: #030303;
+            color: #1a3c6d;
         }
 
         select, input[type="text"], input[type="number"], input[type="date"], input[type="file"] {
@@ -118,7 +118,7 @@
 
         h1 {
             text-align: center;
-            color: #050505;
+            color: #1a3c6d;
             margin-bottom: 30px;
             font-size: 28px;
             font-weight: 700;
@@ -219,17 +219,6 @@
                     <option value="Nagraj">Nagraj</option>
                     <option value="Priya">Priya</option>
                     <option value="Vijay">Vijay</option>
-                    <option value="Asha">Asha</option>
-                    <option value="Prashanth">Prashanth</option>
-                    <option value="Shashidhar">Shashidhar</option>
-                    <option value="Shivanand">Shivanand</option>
-                    <option value="J.Mahesh">J.Mahesh</option>
-                    <option value="Venkatesh">Venkatesh</option>
-                    <option value="Ashok">Ashok</option>
-                    <option value="Rajendra">Rajendra</option>
-                    <option value="Sachin">Sachin</option>
-                    <option value="J.Mahesh">Pradeep</option>
-                    <option value="Mukesh">Mukesh</option>
                 </select>
             </div>
 
@@ -372,6 +361,7 @@
                 <div id="locationDisplay" class="location-display">Latitude: Not captured | Longitude: Not captured</div>
             </div>
 
+            <!-- Hidden input for timestamp -->
             <input type="hidden" id="timestamp" name="timestamp">
 
             <button type="submit" id="submitButton">Submit</button>
@@ -463,7 +453,7 @@
             subDispositions.innerHTML = '<option value="">Select Sub Disposition</option>';
 
             const rightPartyOptions = [
-                'Promise to Pay Post Auction', 'Promise to Pay Renewal', 'Promise to Pay Release', 'Promise to Pay ITO',
+                'Promise to Pay Renewal', 'Promise to Pay Release', 'Promise to Pay ITO',
                 'Promise to Pay RNRP', 'Promise to Pay MIP interest', 'Pay Within Week',
                 'Paid for ITO Awaiting for Slot', 'Paid for RNRP Awaiting for Slot',
                 'Pay Within 15 days', 'PTP But Not Confirm Date', 'UT A/C Cx Will Clear by Tenure End',
@@ -559,6 +549,7 @@
                 return;
             }
 
+            // Validation
             const visibleGroups = Array.from(document.querySelectorAll('.form-group'))
                 .filter(group => group.style.display === 'flex');
             
@@ -620,6 +611,7 @@
                 return;
             }
 
+            // Capture timestamp
             const timestampInput = document.getElementById('timestamp');
             const now = new Date();
             timestampInput.value = now.toLocaleString('en-IN', { 
@@ -637,7 +629,7 @@
             if (latInput) formData.append('latitude', latInput.value);
             if (lonInput) formData.append('longitude', lonInput.value);
             
-            fetch('https://script.google.com/macros/s/AKfycbwUoC94ssU5XkfdEwmiphI3N8KrQckz8QPCQEHA9abYQrO02VXV_dj26NfUyxGy6R7Q/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbxYv-3zGRtx8gEtDZcvMrqf_aiPgo0hREW2DzlIQ48KAbODqDMNZFwws0_n3QB61DU4/exec', {
                 method: 'POST',
                 body: formData
             })
@@ -645,8 +637,8 @@
             .then(data => {
                 if (data.status === 'success') {
                     setTimeout(() => {
-                        location.reload(); // Refresh the page automatically without alert
-                    }, 1000);
+                        location.reload(); // Silent refresh
+                    }, 2000);
                 } else {
                     alert('Error submitting form data.');
                     isSubmitted = false;
